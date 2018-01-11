@@ -1,31 +1,61 @@
-<template>
+<!-- <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
   </div>
-</template>
+</template> -->
+
+<!-- <template>
+  <v-app id="inspire" dark>
+    <v-navigation-drawer
+      clipped
+      fixed
+      v-model="drawer"
+      app
+    >
+      <v-list dense>
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>dashboard</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Dashboard</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Settings</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar app fixed clipped-left>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title>Loco Hot</v-toolbar-title>
+    </v-toolbar>
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout justify-center align-center>
+        </v-layout>
+      </v-container>
+    </v-content>
+    <v-footer app fixed>
+    </v-footer>
+  </v-app>
+</template> -->
 
 <script>
 export default {
   name: 'HelloWorld',
+  props: {
+    source: String
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Loco Hot',
+      drawer: null
     }
   }
 }

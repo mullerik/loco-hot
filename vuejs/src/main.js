@@ -3,13 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import Vuetify from 'vuetify'
+import StarRating from 'vue-star-rating'
 
+Vue.use(Vuetify)
 Vue.config.productionTip = false
+Vue.component('star-rating', StarRating)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App, StarRating }
 })
