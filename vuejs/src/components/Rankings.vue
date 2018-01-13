@@ -105,7 +105,7 @@
                     <v-icon dark right>clear</v-icon>
                   </v-btn>
                 </div>
-                <div v-else>
+                <div v-else class="mt-5">
                   <v-card color="blue-grey darken-2" class="white--text">
                     <v-card-title primary-title>
                       <div class="headline">Oops...</div>
@@ -129,9 +129,91 @@
                   </v-card>
                 </div>
               </div>
-              <v-card v-if="curPage == 'settings'">
-                <h1>Settings</h1>
-              </v-card>
+              <div v-if="curPage == 'settings'">
+
+                <img height="100px" src="http://vignette3.wikia.nocookie.net/scribblenauts/images/f/fc/Wizard_Male.png/revision/latest?cb=20130215182314" />
+                <h2 class="pb-2">Team Building Wizard!</h2>
+                <v-stepper v-model="e6" vertical>
+                  <v-stepper-step step="1" v-bind:complete="e6 > 1">
+                    Choose # Of Teams
+                  </v-stepper-step>
+                  <v-stepper-content step="1">
+                    <v-flex xs12>
+                      <v-select
+                        v-bind:items="optionsForNumberOfTeams"
+                        v-model="numberOfTeams"
+                        label="Number Of Teams"
+                        single-line
+                        bottom
+                      ></v-select>
+                    </v-flex>
+                    <v-btn color="primary" @click.native="e6 = 2">Continue</v-btn>
+                  </v-stepper-content>
+                  <v-stepper-step step="2" v-bind:complete="e6 > 2">
+                    Decide Who's On The Bench
+                    <small>(Optional)</small>
+                  </v-stepper-step>
+                  <v-stepper-content step="2">
+                    <v-flex xs12>
+                      <v-select
+                        v-bind:items="this.players.map((p) => p.name)"
+                        label="Players To Exclude"
+                        multiple
+                        bottom
+                        max-height="200"
+                      ></v-select>
+                    </v-flex>
+                    <v-btn color="primary" @click.native="e6 = 3">Continue</v-btn>
+                  </v-stepper-content>
+                  <v-stepper-step step="3" v-bind:complete="e6 > 3">Give Priority To
+                    <small>What's the most important aspect?</small>
+                  </v-stepper-step>
+                  <v-stepper-content step="3">
+                    <v-flex xs14 sm6 md6>
+                      <v-radio-group v-model="ex8" column>
+                        <v-radio label="Friends"
+                          color="primary"
+                          value="friends">
+                          <v-icon>add</v-icon>
+                        </v-radio>
+                        <v-radio label="Ranking"
+                          color="secondary"
+                          value="ranking"></v-radio>
+                        <v-radio label="Score"
+                          color="success"
+                          value="score"></v-radio>
+                        <v-radio label="Random"
+                          color="info"
+                          value="shuffle"></v-radio>
+                      </v-radio-group>
+                    </v-flex>
+                    <v-btn color="primary" @click.native="e6 = 4">Continue</v-btn>
+                  </v-stepper-content>
+                  <v-stepper-step step="4">Summary</v-stepper-step>
+                  <v-stepper-content step="4">
+                    <h3 class="text-xs-left">
+                      <v-icon>check</v-icon>{{ numberOfTeams }} Teams<br />
+                      <v-icon>check</v-icon>Excluding Nobody <br />
+                      <v-icon>check</v-icon> Prioritizing {{ ex8 }}<br />
+                    </h3>
+                    <v-btn v-on:click="goToTeams" class= "mt-3" round color="primary">
+                      Build
+                      <v-icon right>build</v-icon>
+                    </v-btn>
+                  </v-stepper-content>
+                </v-stepper>
+                <v-snackbar
+                  :timeout="snack_timeout"
+                  bottom
+                  vertical
+                  multi-line
+                  v-model="snackbar"
+                >
+                  Building Teams.<br />
+                  This might take a few seconds.
+                  <v-progress-linear v-bind:indeterminate="true"></v-progress-linear>
+                </v-snackbar>
+              </div>
             </v-flex>
           </v-layout>
         </v-container>
@@ -183,7 +265,13 @@ export default {
     return {
       curPage: 'rankings',
       userName: this.$route.query.userName,
-      newRatings: {}
+      newRatings: {},
+      e6: 1,
+      numberOfTeams: null,
+      optionsForNumberOfTeams: [2, 3, 4],
+      ex8: 'friends',
+      snackbar: false,
+      snack_timeout: 4000
     }
   },
   computed: {},
@@ -202,6 +290,13 @@ export default {
     createTeam () {
       this.$firebaseRefs.teamA.set([{'name': 'Arik'}])
       // this.$firebaseRefs.teamA.push({'name': 'Arik'}, {'name': 'Sapir'})
+    },
+    goToTeams () {
+      this.snackbar = true
+      setTimeout(() => {
+        this.curPage = 'teams'
+        this.e6 = 1
+      }, 5000)
     }
   }
 }
