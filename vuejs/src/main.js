@@ -2,10 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import Vuetify from 'vuetify'
 import StarRating from 'vue-star-rating'
+import router from './router'
+import VueFire from 'vuefire'
+import './firebase'
 
+Vue.use(VueFire)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 Vue.component('star-rating', StarRating)
@@ -15,5 +18,5 @@ new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App, StarRating }
+  components: { App }
 })
