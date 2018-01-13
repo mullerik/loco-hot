@@ -7,9 +7,9 @@
                  color='primary'
                  class='elevation-2'
                  card>
-        <v-toolbar-title class='white--text'>IDC Football League</v-toolbar-title>
+        <v-toolbar-title class='white--text'>{{userName}} @ IDC Football League</v-toolbar-title>
       </v-toolbar>
-      <v-content class='pa-0'>
+      <v-content class='pa-0' style='margin-bottom: 70px'>
         <v-container class='pa-1'>
           <!-- <v-text-field
             name='input-1-3'
@@ -19,7 +19,6 @@
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <div v-if="curPage == 'rankings'">
-                <h2>Hi {{ userName }}</h2>
                 <v-card>
                   <v-alert color='success' icon='check_circle' value='true'>
                     <v-badge color="indigo">
@@ -63,7 +62,7 @@
                 </v-card>
               </div>
               <div v-if="curPage == 'teams'">
-                <div v-if="this.teams.length">
+                <div v-if="this.teams.length" class="mt-2">
                   <v-card>
                     <v-alert color='success' value='true'>
                       <v-badge color="indigo">
@@ -75,15 +74,13 @@
                     <v-expansion-panel-content>
                       <div slot="header">TeamA</div>
                       <v-card>
-                        <v-list>
-                          <v-list-tile v-for="(player, i) in this.teamA" :key="i">
-                            <v-list-tile-content>
-                              {{ player.name }}
-                            </v-list-tile-content>
-                            <v-list-tile-action>
-                            </v-list-tile-action>
-                          </v-list-tile>
-                        </v-list>
+                        <v-list-tile v-for="(player, i) in this.teamA" :key="i">
+                          <v-list-tile-content>
+                            <h3>{{ player.name }}</h3>
+                          </v-list-tile-content>
+                          <v-list-tile-action>
+                          </v-list-tile-action>
+                        </v-list-tile>
                       </v-card>
                     </v-expansion-panel-content>
                     <v-expansion-panel-content>
@@ -105,26 +102,25 @@
                     <v-icon dark right>clear</v-icon>
                   </v-btn>
                 </div>
-                <div v-else class="mt-5">
+                <div v-else class="mt-2">
                   <v-card color="blue-grey darken-2" class="white--text">
                     <v-card-title primary-title>
                       <div class="headline">Oops...</div>
-                      <div>No teams were found. Go to settings and build them!</div>
+                      <div class="text-xs-left">No teams were found. Go to settings and build them!</div>
                     </v-card-title>
                     <v-fab-transition>
                       <v-btn
                         color="blue"
                         fab
                         dark
-                        small
+                        medium
                         absolute
                         bottom
-                        left
+                        right
+                        v-on:click="curPage='settings'"
                       >
-                        <v-btn flat v-on:click="curPage='settings'">
-                          <v-icon>settings</v-icon>
-                        </v-btn>
-                      </v-btn>
+                        <v-icon>settings</v-icon>
+                    </v-btn>
                     </v-fab-transition>
                   </v-card>
                 </div>
@@ -133,7 +129,7 @@
 
                 <img height="100px" src="http://vignette3.wikia.nocookie.net/scribblenauts/images/f/fc/Wizard_Male.png/revision/latest?cb=20130215182314" />
                 <h2 class="pb-2">Team Building Wizard!</h2>
-                <v-stepper v-model="e6" vertical>
+                <v-stepper v-model="e6" vertical class="pb-2 && mb-3">
                   <v-stepper-step step="1" v-bind:complete="e6 > 1">
                     Choose # Of Teams
                   </v-stepper-step>
@@ -196,7 +192,7 @@
                       <v-icon>check</v-icon>Excluding Nobody <br />
                       <v-icon>check</v-icon> Prioritizing {{ ex8 }}<br />
                     </h3>
-                    <v-btn v-on:click="goToTeams" class= "mt-3" round color="primary">
+                    <v-btn v-on:click="buildTeams" class= "mt-3" round color="primary">
                       Build
                       <v-icon right>build</v-icon>
                     </v-btn>
@@ -219,16 +215,21 @@
         </v-container>
       </v-content>
       <v-bottom-nav shift
+                    fixed
                     :value='true'
                     :active.sync='curPage'
                     color='white'>
           <v-btn flat color='teal' value='teams'>
             <span>Teams</span>
-            <v-icon>people</v-icon>
+            <v-icon>call_split</v-icon>
           </v-btn>
           <v-btn flat color='teal' value='rankings'>
             <span>Rankings</span>
             <v-icon>grade</v-icon>
+          </v-btn>
+          <v-btn flat color='teal' value='friends'>
+            <span>Friends</span>
+            <v-icon>people</v-icon>
           </v-btn>
           <v-btn flat color='teal' value='settings'>
             <span>Settings</span>
@@ -291,7 +292,11 @@ export default {
       this.$firebaseRefs.teamA.set([{'name': 'Arik'}])
       // this.$firebaseRefs.teamA.push({'name': 'Arik'}, {'name': 'Sapir'})
     },
-    goToTeams () {
+    buildTeams () {
+      let teamA = [{'name': 'Arik'}]
+      let teamB = [{'name': 'Sapir'}]
+      this.$firebaseRefs.teamA.set(teamA)
+      this.$firebaseRefs.teamB.set(teamB)
       this.snackbar = true
       setTimeout(() => {
         this.curPage = 'teams'

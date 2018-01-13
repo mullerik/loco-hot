@@ -1,45 +1,54 @@
 <template>
   <div>
-    <h1>LocoHot!</h1>
     <v-app id='inspire'>
-      <v-card color='white' flat>
-        <v-card-text>
-          <v-container fluid>
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  name='input-2'
-                  label='Enter Your Name'
-                  prepend-icon='person'
-                  v-model='userName'
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row wrap>
-              <v-flex xs12>
-                <v-select
-                  v-bind:items='leagues'
-                  label='Choose Your League'
-                  item-value='text'
-                  prepend-icon='group'
-                  v-model='chosenLeague'
-                ></v-select>
-              </v-flex>
-            </v-layout>
-            <v-alert v-if="credentialsProblem" color="error" icon="warning" value="true">
-              Check your credentials.
-            </v-alert>
-            <v-btn
-              color='secondary'
-              :loading='loading'
-              @click.native="loader = 'loading'"
-              :disabled='loading || (!userName || !this.chosenLeague)'
-            >
-              Join Now!
-            </v-btn>
-          </v-container>
-        </v-card-text>
-      </v-card>
+      <v-content class='pa-0'>
+        <v-container class='pa-0'>
+          <!-- <v-text-field
+            name='input-1-3'
+            label='Filter players'
+            prepend-icon='search'
+          ></v-text-field> -->
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+                  <v-container fluid>
+                    <h1 style="margin-top: 100px">LocoHot!</h1>
+                    <v-layout row>
+                      <v-flex xs12>
+                        <v-text-field
+                        name='input-2'
+                        label='Enter Your Name'
+                        prepend-icon='person'
+                        v-model='userName'
+                        ></v-text-field>
+                      </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                      <v-flex xs12>
+                        <v-select
+                        v-bind:items='leagues'
+                        label='Choose Your League'
+                        item-value='text'
+                        prepend-icon='group'
+                        v-model='chosenLeague'
+                        ></v-select>
+                      </v-flex>
+                    </v-layout>
+                    <v-alert v-if="credentialsProblem" color="error" icon="warning" value="true">
+                      Check your credentials.
+                    </v-alert>
+                    <v-btn
+                    color='secondary'
+                    :loading='loading'
+                    @click.native="loader = 'loading'"
+                    :disabled='loading || (!userName || !this.chosenLeague)'
+                    >
+                    Join Now!
+                  </v-btn>
+                </v-container>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
   </v-app>
   </div>
 </template>
