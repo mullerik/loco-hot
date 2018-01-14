@@ -11,7 +11,7 @@
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
                   <v-container fluid>
-                    <h1 style="margin-top: 100px">LocoHot!</h1>
+                    <img style="height: 100px; margin-top: 50px; margin-bottom: 20px" src="../assets/logo.png">
                     <v-layout row>
                       <v-flex xs12>
                         <v-text-field
@@ -68,7 +68,7 @@ export default {
       userName: null,
       chosenLeague: null,
       leagues: [
-        'IDC Gaming League',
+        'IDC Football League',
         'Israeli Premier League',
         'Likudiada',
         'Competitive Ballroom Dancing'

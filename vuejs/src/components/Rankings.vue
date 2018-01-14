@@ -122,7 +122,7 @@
                 </div>
               </div>
               <div v-if="curPage == 'friends'">
-                <div v-if="this.teams.length" class="mt-2">
+                <div class="mt-2">
                   <v-card>
                     <v-alert color='success' icon='thumbs_up_down' value='true'>
                       <v-badge color="indigo">
@@ -154,28 +154,6 @@
                     </v-list-tile>
                   </v-list>
                 </v-card>
-                </div>
-                <div v-else class="mt-2">
-                  <v-card color="blue-grey darken-2" class="white--text">
-                    <v-card-title primary-title>
-                      <div class="headline">Oops...</div>
-                      <div class="text-xs-left">No teams were found. Go to settings and build them!</div>
-                    </v-card-title>
-                    <v-fab-transition>
-                      <v-btn
-                        color="blue"
-                        fab
-                        dark
-                        medium
-                        absolute
-                        bottom
-                        right
-                        v-on:click="curPage='settings'"
-                      >
-                        <v-icon>settings</v-icon>
-                    </v-btn>
-                    </v-fab-transition>
-                  </v-card>
                 </div>
               </div>
               <div v-if="curPage == 'settings'">
