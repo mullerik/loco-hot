@@ -11,18 +11,13 @@
       </v-toolbar>
       <v-content class='pa-0' style='margin-bottom: 70px'>
         <v-container class='pa-1'>
-          <!-- <v-text-field
-            name='input-1-3'
-            label='Filter players'
-            prepend-icon='search'
-          ></v-text-field> -->
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <div v-if="curPage == 'rankings'">
                 <v-card>
                   <v-alert color='success' icon='check_circle' value='true'>
                     <v-badge color="indigo">
-                      Rated
+                      <div class="headline">Ranked</div>
                     </v-badge>
                   </v-alert>
                   <v-list>
@@ -33,19 +28,20 @@
                       <v-icon v-on:click="clearRanking(ranking.name, ranking.ranking)" color="red lighten-1">clear</v-icon>
                       <v-list-tile-action>
                         <star-rating v-model='ranking.ranking'
-                        :inline='true'
+                        inline
                         :show-rating='false'
                         :star-size='20'
                         :max-rating='5'
+                        read-only
                         ></star-rating>
                       </v-list-tile-action>
                     </v-list-tile>
                   </v-list>
                   <v-alert color='warning' icon='priority_high' value='true'>
-                    Unrated
+                    <div class="headline">Unranked</div>
                   </v-alert>
                   <v-list>
-                    <v-list-tile v-for='player in players' v-if='!rankings.map((r)=>r.name).includes(player.name) && player.name != userName' v-bind:key='player.name'>
+                    <v-list-tile v-for='player in players' v-if='!rankings.map((r)=>r.name+r.rankedBy).includes(player.name+userName) && player.name != userName' v-bind:key='player.name'>
                       <v-list-tile-content>
                         <div>{{ player.name }}</div>
                       </v-list-tile-content>
@@ -76,7 +72,7 @@
                       <v-card>
                         <v-list-tile v-for="(player, i) in this.teamA" :key="i">
                           <v-list-tile-content>
-                            <h3>{{ player.name }}</h3>
+                            {{ player.name }}
                           </v-list-tile-content>
                           <v-list-tile-action>
                           </v-list-tile-action>
@@ -101,6 +97,63 @@
                   <v-btn v-on:click="resetTeams" round color="red" dark>Reset Teams
                     <v-icon dark right>clear</v-icon>
                   </v-btn>
+                </div>
+                <div v-else class="mt-2">
+                  <v-card color="blue-grey darken-2" class="white--text">
+                    <v-card-title primary-title>
+                      <div class="headline">Oops...</div>
+                      <div class="text-xs-left">No teams were found. Go to settings and build them!</div>
+                    </v-card-title>
+                    <v-fab-transition>
+                      <v-btn
+                        color="blue"
+                        fab
+                        dark
+                        medium
+                        absolute
+                        bottom
+                        right
+                        v-on:click="curPage='settings'"
+                      >
+                        <v-icon>settings</v-icon>
+                    </v-btn>
+                    </v-fab-transition>
+                  </v-card>
+                </div>
+              </div>
+              <div v-if="curPage == 'friends'">
+                <div v-if="this.teams.length" class="mt-2">
+                  <v-card>
+                    <v-alert color='success' icon='thumbs_up_down' value='true'>
+                      <v-badge color="indigo">
+                        <div class="headline">Friends or Foes?</div>
+                      </v-badge>
+                    </v-alert>
+                  <v-list>
+                    <v-list-tile v-for='player in players' v-if='player.name != userName' v-bind:key='player.name'>
+                      <v-list-tile-content>
+                        {{ player.name }}
+                      </v-list-tile-content>
+                      <v-btn-toggle style="box-shadow: none" v-model="toggle_mood[player.name]">
+                        <v-list-tile-action style="min-width: 35px">
+                          <v-btn small flat icon color="success">
+                            <v-icon>mood</v-icon>
+                          </v-btn>
+                        </v-list-tile-action>
+                        <v-list-tile-action style="min-width: 35px">
+                          <v-btn small flat icon color="warning">
+                            <v-icon>sentiment_neutral</v-icon>
+                          </v-btn>
+                        </v-list-tile-action style="min-width: 35px">
+                        <v-list-tile-action>
+                          <v-btn small flat icon color="error">
+                            <v-icon>mood_bad</v-icon>
+                          </v-btn>
+                        </v-list-tile-action>
+                      </v-btn-toggle>
+                    </v-list-tile>
+                  </v-list>
+                </v-card>
                 </div>
                 <div v-else class="mt-2">
                   <v-card color="blue-grey darken-2" class="white--text">
@@ -166,7 +219,7 @@
                   </v-stepper-step>
                   <v-stepper-content step="3">
                     <v-flex xs14 sm6 md6>
-                      <v-radio-group v-model="ex8" column>
+                      <v-radio-group v-model="priority" column>
                         <v-radio label="Friends"
                           color="primary"
                           value="friends">
@@ -190,7 +243,7 @@
                     <h3 class="text-xs-left">
                       <v-icon>check</v-icon>{{ numberOfTeams }} Teams<br />
                       <v-icon>check</v-icon>Excluding Nobody <br />
-                      <v-icon>check</v-icon> Prioritizing {{ ex8 }}<br />
+                      <v-icon>check</v-icon> Prioritizing {{ priority }}<br />
                     </h3>
                     <v-btn v-on:click="buildTeams" class= "mt-3" round color="primary">
                       Build
@@ -219,10 +272,6 @@
                     :value='true'
                     :active.sync='curPage'
                     color='white'>
-          <v-btn flat color='teal' value='teams'>
-            <span>Teams</span>
-            <v-icon>call_split</v-icon>
-          </v-btn>
           <v-btn flat color='teal' value='rankings'>
             <span>Rankings</span>
             <v-icon>grade</v-icon>
@@ -235,6 +284,10 @@
             <span>Settings</span>
             <v-icon>settings</v-icon>
           </v-btn>
+          <v-btn flat color='teal' value='teams'>
+            <span>Teams</span>
+            <v-icon>call_split</v-icon>
+          </v-btn>
         </v-bottom-nav>
     </v-app>
   </div>
@@ -242,8 +295,9 @@
 
 
 <script>
-// import _ from 'lodash'
+import _ from 'lodash'
 import {db} from '../firebase'
+const shuffleArray = arr => arr.sort(() => Math.random() - 0.5)
 export default {
   name: 'Rankings',
   firebase: {
@@ -270,9 +324,10 @@ export default {
       e6: 1,
       numberOfTeams: null,
       optionsForNumberOfTeams: [2, 3, 4],
-      ex8: 'friends',
+      priority: 'friends',
       snackbar: false,
-      snack_timeout: 4000
+      snack_timeout: 4000,
+      toggle_mood: {}
     }
   },
   computed: {},
@@ -283,18 +338,55 @@ export default {
     clearRanking (name, ranking) {
       let key = this.rankings.filter((r) => r.name === name && r.ranking === ranking && r.rankedBy === this.userName)[0]['.key']
       this.$firebaseRefs.rankings.child(key).remove()
-      console.log(key)
+      this.newRatings[name] = 0
     },
     resetTeams () {
       this.$firebaseRefs.teams.remove()
     },
-    createTeam () {
-      this.$firebaseRefs.teamA.set([{'name': 'Arik'}])
-      // this.$firebaseRefs.teamA.push({'name': 'Arik'}, {'name': 'Sapir'})
-    },
     buildTeams () {
-      let teamA = [{'name': 'Arik'}]
-      let teamB = [{'name': 'Sapir'}]
+      let teamA = []
+      let teamB = []
+      let overallRankgins = {}
+      // Initialize overallRankings with all player names
+      this.players.forEach((p) => {
+        overallRankgins[p.name] = []
+      })
+      // Push rankings by name
+      this.rankings.map((r) => {
+        overallRankgins[r.name].push(r.ranking)
+      })
+      // Calculate average
+      Object.keys(overallRankgins).map((k) => {
+        let sum = _.sum(overallRankgins[k])
+        let len = overallRankgins[k].length
+        if (!len) {
+          overallRankgins[k] = 2.5
+        } else {
+          overallRankgins[k] = +(sum / len).toFixed(2)
+        }
+      })
+      let toggleTeam = (curTeam) => {
+        if (curTeam === teamA) {
+          return teamB
+        } else {
+          return teamA
+        }
+      }
+      overallRankgins = Object.entries(overallRankgins).sort((a, b) => b[1] - a[1])
+      if (this.priority === 'shuffle') {
+        overallRankgins = shuffleArray(overallRankgins)
+      }
+      let turn = 1
+      let teams = [teamA, teamB]
+      let curTeam = teams[1]
+      teamA.push({'name': overallRankgins[0][0]})
+      for (var i = 1; i < overallRankgins.length; i++) {
+        curTeam.push({'name': overallRankgins[i][0]})
+        if (!turn) {
+          curTeam = toggleTeam(curTeam)
+        }
+        turn = 1 - turn
+      }
       this.$firebaseRefs.teamA.set(teamA)
       this.$firebaseRefs.teamB.set(teamB)
       this.snackbar = true
